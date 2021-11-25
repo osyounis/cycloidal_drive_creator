@@ -1,10 +1,15 @@
 """
 This file contains all the functions needed to run the cycloidal drive creator
-app. The output of the app is a '.txt' file that contains the coordiantes needed
-to create a 'curve' feature in SolidWorks for the cycloidal drive rotor.
+app. The output of the app is a '.txt' file that contains equations needed to 
+use the "Equation Driven Curve" tool with a "Parametric" equation type. The 
+equations will be populated with the values needed to create your unique cycloidal
+drive profile, based on your inputs. It will only make half of the profile in
+SolidWorks. The user will need to mirror the curve to complete their drive. The
+'.txt' will also include the user's input parameters and the coordiantes of their
+unique cycloidal drive rotor; for the full curve.
 
 This code has the following requirements needed to run:
-• Python 3.8
+• Python 3.9
 • numpy
 • pandas
 
@@ -52,11 +57,14 @@ def stop_progressbar():
 
 
 def get_info():
-	"""Gets all data from the form to use in the main code."""
+	"""
+	Gets all data from the form to use in the main code. Returns tuple to make
+	information uneditable.
+	"""
 	rotor_radius = float(rotor_radius_entry.get())
 	roller_radius = float(roller_radius_entry.get())
 	eccentricity = float(eccentricity_entry.get())
-	num_of_rollers = float(num_rollers_entry.get())
+	num_of_rollers = int(num_rollers_entry.get())
 	degree_steps = float(steps_entry.get())
 	offset = float(offset_entry.get())
 	results_filename = output_file_path_entry_box.get() + ".txt"
@@ -65,54 +73,61 @@ def get_info():
 			degree_steps, offset, results_filename)
 
 
-def int_check(input_value):
+def int_check(input_value, warning_box):
 	"""Checks if input is a positive integer."""
 	try:
 		int_value = int(input_value)
 		if int_value > 0:
-			num_rollers_warning.config(text="")
+			warning_box.config(text="")
 			return True
 		else:
-			num_rollers_warning.config(text="Please type a positive integer.")
+			warning_box.config(text="Please type a positive integer.")
 			return False
 	except ValueError:
-		num_rollers_warning.config(text="Please type an integer.")
+		warning_box.config(text="Please type an integer.")
 		return False
 
-#############
-#	NEED TO FIX WARNING BOXES TO MATCH WITH ENTRY BOXES. CREATE SECOND VARIABLE.
-#	IN FUNCTIONS.
-#############
-def pos_num_check(input_value):
+
+def pos_num_check(input_value, warning_box):
 	"""Checks if input is a positive integer."""
 	try:
 		pos_num_value = float(input_value)
 		if pos_num_value > 0:
-			num_rollers_warning.config(text="")
+			warning_box.config(text="")
 			return True
 		else:
-			num_rollers_warning.config(text="Please type a positive number.")
+			warning_box.config(text="Please type a positive number.")
 			return False
 	except ValueError:
-		num_rollers_warning.config(text="Please type a number.")
+		warning_box.config(text="Please type a number.")
 		return False
 
 
-def num_check(input_value):
+def num_check(input_value, warning_box):
 	"""Checks if input is a positive integer."""
 	try:
 		num_value = float(input_value)
-		num_rollers_warning.config(text="")
+		warning_box.config(text="")
 		return True
 
 	except ValueError:
-		num_rollers_warning.config(text="Please type a number.")
+		warning_box.config(text="Please type a number.")
 		return False
 
 
 ########################################
 #              Functions               #
 ########################################
+
+def create_rad_array(step):
+	"""Takes the steps input from the GUI and creates a linspace array in radians."""
+	total_steps = int(((1 / step) * 360) + 1)
+	degree_array = np.linspace(0, 360, total_steps)
+	rad_array = ((2 * np.pi) / 360) * degree_array
+
+	return rad_array
+
+
 
 
 
