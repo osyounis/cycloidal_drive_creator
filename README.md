@@ -19,7 +19,7 @@ This application takes these four parameters and creates a parametric equation f
 ## Installation
 [**Python 3.9**](https://www.python.org/) or higher is requried to run this application. If this is your first time installing Python, **please make sure to add python to your computer's PATH**. To do this, make sure you check the **"Add Python to PATH"** box on the installation wizard, as shown in the image below.
 
-**IMAGE HERE!**
+![Adding Python to PATH on Install](https://raw.githubusercontent.com/osyounis/cycloidal_drive_creator/main/figures/Python_PATH.JPG)
 
 Once you have the correct Python version installed, you can download and run the `.pyw` file to use the application.
 
@@ -30,7 +30,7 @@ In order to use this appication, you will need to know the following parameters 
 
 Launch the application by double clicking the `.pyw` file.
 
-**IMAGE HERE!**
+![Cycloidal Drive Creator App GUI](https://raw.githubusercontent.com/osyounis/cycloidal_drive_creator/main/figures/GUI_interface.JPG)
 
 Input your parameters into the correct fields. Click the "Browse" button to select a name and location for your output file; this is where parametric equation for your rotor will be saved. Once you have filled out all the fields, press the "Run" button. If any information was entered incorrectly or is missing, the application will stop and flag which fields you need to fix before running it again.
 
