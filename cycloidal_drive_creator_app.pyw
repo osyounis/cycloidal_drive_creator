@@ -152,7 +152,7 @@ def create_output_file(user_info, equations):
 		f_obj.write("Description of Parameters:\n\n")
 		f_obj.write("R  :  Radius of the Rotor\n")
 		f_obj.write("Rr :  Radius of the Roller\n")
-		f_obj.write("E  :  Eccentricity - Offset from the Input Shafter to the center of the Rotor\n")
+		f_obj.write("E  :  Eccentricity - Offset from the Input Shafter to the center of the Roller\n")
 		f_obj.write("N  :  Number of Rollers\n\n")
 		f_obj.write("-"*85)
 		f_obj.write("\n")
