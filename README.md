@@ -40,7 +40,7 @@ One thing to note is when selecting the range for the parametric equation, all v
 
 The YouTube channel [**stepbystep-robotics**](https://www.youtube.com/channel/UC3Z_DCfdbL7I5nZqf8ezejQ) solved this issue by creating half of the rotor profile (setting the range between `0` and `π`) then mirroring it about a center axis. You can follow his method by [clicking here](https://youtu.be/Nk3aaVcvbpA?t=400).
 
-The YouTube channel [**How To Mechatronics**](https://www.youtube.com/channel/UCmkP178NasnhR3TWQyyP4Gw) solved this issue by setting the profile range just under `2π` (setting the range between `0` and `2π - 0.0009`) and then filling in the gap with a spline. You can follow hsi method by [clicking here](https://youtu.be/OsS9-FzKN6s?t=444)
+The YouTube channel [**How To Mechatronics**](https://www.youtube.com/channel/UCmkP178NasnhR3TWQyyP4Gw) solved this issue by setting the profile range just under `2π` (setting the range between `0` and `2π - 0.0009`) and then filling in the gap with a spline. You can follow his method by [clicking here](https://youtu.be/OsS9-FzKN6s?t=444)
 
 Once you have created your profile in SolidWorks, you can then extrude it to the desired thickness.
 
