@@ -1,12 +1,12 @@
 """
 This file contains all the functions needed to run the cycloidal drive creator
 app. The output of the app is a '.txt' file that contains equations needed to 
-use the "Equation Driven Curve" tool with a "Parametric" equation type. The 
-equations will be populated with the values needed to create your unique
-cycloidal drive profile, based on your inputs. It will only make half of the
-profile in SolidWorks. The user will need to mirror the curve to complete their
-drive. The '.txt' will also include the user's input parameters of their unique
-cycloidal drive rotor; for the full curve.
+use the "Equation Driven Curve" tool with a "Parametric" equation type in 
+SolidWorks. It can also output the equation needed for Fusion360 as well as 
+Python. The equations will be populated with the values needed to create your
+unique cycloidal drive profile, based on your inputs. The '.txt' will also
+include the user's input parameters of their unique cycloidal drive rotor; for 
+the full curve.
 
 
 This code has the following requirements needed to run:
@@ -17,6 +17,15 @@ The Cycloidal Drive equations this program kicks out was made using the
 information provided by Joong-Ho Shin and Soon-Man Kwon's paper "On the lobe
 profile design in a cycloid reducer using instant velocity center".
 https://www.academia.edu/32875937/On_the_lobe_profile_design_in_a_cycloid_reducer_using_instant_velocity_center
+
+
+Contributors: Sean Alford.
+
+His improvements allowed the app to output equations needed to create the
+cycloidal drive profile in Fusion360 and Python. He also added a selections
+section to the app, to allow the user to select their desired program: Python,
+SolidWorks or Fusion360. The following is a link to his GitHub page:
+https://github.com/seanalford
 
 
 Author: Omar Younis
@@ -30,7 +39,6 @@ from fractions import Fraction
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
-import tkinter as tk
 
 
 
@@ -123,32 +131,31 @@ def entry_checker(entry_boxes):
 #              Functions               #
 ########################################
 
-
-
 def create_equations(user_info):
 	"""Takes the user's input parameters and creates the two equation strings
-	   needed for the SolidWorks parametric curve feature."""
+	   needed for the SolidWorks, Fusion360 or Python parametric curve feature."""
 	
 	R = user_info[0]		# Rotor Radius
 	Rr = user_info[1]		# Roller Radius
 	E = user_info[2]		# Eccentricity
 	N = user_info[3]		# Number of Rollers
 
-	of = outputformat.get()
+	outputformat_value = outputformat.get()
 
-	match of:
-		case 0: # Solidworks
-			psi = f"arctan(sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-cos({1-N}*t)))"
-			x_equation = f"X = ({R}*cos(t))-({Rr}*cos(t+{psi}))-({E}*cos({N}*t))"
-			y_equation = f"Y = (-{R}*sin(t))+({Rr}*sin(t+{psi}))+({E}*sin({N}*t))"
-		case 1: # Fusion 360
-			psi = f"atan(sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-cos({1-N}*t)))"
-			x_equation = f"X = ({R}*cos(t))-({Rr}*cos(t+{psi}))-({E}*cos({N}*t))"
-			y_equation = f"Y = (-{R}*sin(t))+({Rr}*sin(t+{psi}))+({E}*sin({N}*t))"
-		case 2: # Python			
-			psi = f"np.arctan(np.sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-np.cos({1-N}*t)))"
-			x_equation = f"X = ({R}*np.cos(t))-({Rr}*np.cos(t+{psi}))-({E}*np.cos({N}*t))"
-			y_equation = f"Y = (-{R}*np.sin(t))+({Rr}*np.sin(t+{psi}))+({E}*np.sin({N}*t))"
+	if outputformat_value == 0:		# SolidWorks
+		psi = f"arctan(sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-cos({1-N}*t)))"
+		x_equation = f"X = ({R}*cos(t))-({Rr}*cos(t+{psi}))-({E}*cos({N}*t))"
+		y_equation = f"Y = (-{R}*sin(t))+({Rr}*sin(t+{psi}))+({E}*sin({N}*t))"
+
+	elif outputformat_value == 1:	# Fusion360
+		psi = f"atan(sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-cos({1-N}*t)))"
+		x_equation = f"X = ({R}*cos(t))-({Rr}*cos(t+{psi}))-({E}*cos({N}*t))"
+		y_equation = f"Y = (-{R}*sin(t))+({Rr}*sin(t+{psi}))+({E}*sin({N}*t))"
+
+	else:	# Python
+		psi = f"np.arctan(np.sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-np.cos({1-N}*t)))"
+		x_equation = f"X = ({R}*np.cos(t))-({Rr}*np.cos(t+{psi}))-({E}*np.cos({N}*t))"
+		y_equation = f"Y = (-{R}*np.sin(t))+({Rr}*np.sin(t+{psi}))+({E}*np.sin({N}*t))"
 
 	return (x_equation, y_equation)
 
@@ -179,15 +186,17 @@ def create_output_file(user_info, equations):
 		f_obj.write(f"E  =  {user_info[2]}\n")
 		f_obj.write(f"N  =  {user_info[3]}\n\n\n")
 
-		# X and Y Equations
-		of = outputformat.get()
-		match of:
-			case 0: # Solidworks
-				f_obj.write("The Equations to PASTE in SolidWorks' 'Equation Driven Curve' Feature:\n\n")
-			case 1: # Fusion 360
-				f_obj.write("The Equations to PASTE in Fusion 360 'Equation Driven Curve' Feature:\n\n")
-			case 2: # Python
-				f_obj.write("The Equations to PASTE in Python code:\n\n")		
+		# X and Y Equations depending on platform 
+		# selected: SolidWorks, Fusion360 or Python.
+		outputformat_value = outputformat.get()
+
+		if outputformat_value == 0:		# SolidWorks
+			f_obj.write("The Equations to PASTE in SolidWorks' 'Equation Driven Curve' Feature:\n\n")
+		elif outputformat_value == 1:	# Fusion360
+			f_obj.write("The Equations to PASTE in Fusion360 'Equation Driven Curve' Feature:\n\n")
+		else:		# Python
+			f_obj.write("The Equations to PASTE in Python code:\n\n")
+	
 		f_obj.write(f"{equations[0]}\n")
 		f_obj.write(f"{equations[1]}\n\n")
 		f_obj.write("-"*85)
@@ -321,34 +330,12 @@ num_rollers_warning = Label(dim_frame, text="", justify='right', fg='#D10000')
 num_rollers_warning.grid(sticky='w', row=3, column=4, padx=(0, 10), pady=(0, 10))
 
 
-#  Section 2 of the App (Output File Selection)
+#  Section 2 of the App (Program Format)
 # ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-output_frame = LabelFrame(root, text="Select Output File", padx=5, pady=5)
-output_frame.grid(sticky="we", row=1, padx=10, pady=10)
+output_format = LabelFrame(root, text="Program Format", padx=5, pady=5)
+output_format.grid(sticky="we", row=1, padx=10, pady=10)
 
-output_file_path_entry_box = Entry(output_frame, width=60)
-output_file_path_entry_box.grid(row=0, column=0, padx=10)
-
-output_save_button = Button(output_frame, text="Browse", padx=13, command=get_output_file)
-output_save_button.grid(row=0, column=1)
-
-
-#  Section 3 of the App (Run/Progressbar Section)
-# ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-status_frame = LabelFrame(root, padx=5, pady=5)
-status_frame.grid(sticky="we", row=2, padx=10, pady=10)
-
-my_progress = ttk.Progressbar(status_frame, orient=HORIZONTAL, length=300,
-                              mode='determinate', maximum=100)
-my_progress.grid(sticky="w", row=0, column=0, padx=10, pady=10)
-
-status_label = Label(status_frame, text="", justify='right')
-status_label.grid(sticky="e", row=0, column=1, padx=10, pady=10)
-
-output_format = LabelFrame(root, text="Output File Format", padx=5, pady=5)
-output_format.grid(sticky="we", row=3, padx=10, pady=10)
-
-outputformat = tk.IntVar()
+outputformat = IntVar()
 
 solidWorks = Radiobutton(output_format, text="SolidWorks", variable=outputformat, value=0)
 solidWorks.grid(sticky="w", row=0, column=0, padx=10, pady=10)
@@ -360,6 +347,31 @@ python = Radiobutton (output_format, text="Python", variable=outputformat, value
 python.grid(sticky="e", row=0, column=2, padx=10, pady=10)
 
 outputformat.set(0)
+
+
+#  Section 3 of the App (Output File Selection)
+# ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+output_frame = LabelFrame(root, text="Select Output File", padx=5, pady=5)
+output_frame.grid(sticky="we", row=2, padx=10, pady=10)
+
+output_file_path_entry_box = Entry(output_frame, width=60)
+output_file_path_entry_box.grid(row=0, column=0, padx=10)
+
+output_save_button = Button(output_frame, text="Browse", padx=13, command=get_output_file)
+output_save_button.grid(row=0, column=1)
+
+
+#  Section 4 of the App (Run/Progressbar Section)
+# ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+status_frame = LabelFrame(root, padx=5, pady=5)
+status_frame.grid(sticky="we", row=3, padx=10, pady=10)
+
+my_progress = ttk.Progressbar(status_frame, orient=HORIZONTAL, length=300,
+                              mode='determinate', maximum=100)
+my_progress.grid(sticky="w", row=0, column=0, padx=10, pady=10)
+
+status_label = Label(status_frame, text="", justify='right')
+status_label.grid(sticky="e", row=0, column=1, padx=10, pady=10)
 
 run_button = Button(root, text="Run", padx=30, command=run_main_code)
 run_button.grid(sticky="e", row=4, padx=10, pady=10)
