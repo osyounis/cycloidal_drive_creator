@@ -30,6 +30,7 @@ from fractions import Fraction
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
+import tkinter as tk
 
 
 
@@ -122,6 +123,8 @@ def entry_checker(entry_boxes):
 #              Functions               #
 ########################################
 
+
+
 def create_equations(user_info):
 	"""Takes the user's input parameters and creates the two equation strings
 	   needed for the SolidWorks parametric curve feature."""
@@ -131,9 +134,21 @@ def create_equations(user_info):
 	E = user_info[2]		# Eccentricity
 	N = user_info[3]		# Number of Rollers
 
-	psi = f"arctan(sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-cos({1-N}*t)))"
-	x_equation = f"X = ({R}*cos(t))-({Rr}*cos(t+{psi}))-({E}*cos({N}*t))"
-	y_equation = f"Y = (-{R}*sin(t))+({Rr}*sin(t+{psi}))+({E}*sin({N}*t))"
+	of = outputformat.get()
+
+	match of:
+		case 0: # Solidworks
+			psi = f"arctan(sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-cos({1-N}*t)))"
+			x_equation = f"X = ({R}*cos(t))-({Rr}*cos(t+{psi}))-({E}*cos({N}*t))"
+			y_equation = f"Y = (-{R}*sin(t))+({Rr}*sin(t+{psi}))+({E}*sin({N}*t))"
+		case 1: # Fusion 360
+			psi = f"atan(sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-cos({1-N}*t)))"
+			x_equation = f"X = ({R}*cos(t))-({Rr}*cos(t+{psi}))-({E}*cos({N}*t))"
+			y_equation = f"Y = (-{R}*sin(t))+({Rr}*sin(t+{psi}))+({E}*sin({N}*t))"
+		case 2: # Python			
+			psi = f"np.arctan(np.sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-np.cos({1-N}*t)))"
+			x_equation = f"X = ({R}*np.cos(t))-({Rr}*np.cos(t+{psi}))-({E}*np.cos({N}*t))"
+			y_equation = f"Y = (-{R}*np.sin(t))+({Rr}*np.sin(t+{psi}))+({E}*np.sin({N}*t))"
 
 	return (x_equation, y_equation)
 
@@ -165,7 +180,14 @@ def create_output_file(user_info, equations):
 		f_obj.write(f"N  =  {user_info[3]}\n\n\n")
 
 		# X and Y Equations
-		f_obj.write("The Equations to PASTE in SolidWorks' 'Equation Driven Curve' Feature:\n\n")
+		of = outputformat.get()
+		match of:
+			case 0: # Solidworks
+				f_obj.write("The Equations to PASTE in SolidWorks' 'Equation Driven Curve' Feature:\n\n")
+			case 1: # Fusion 360
+				f_obj.write("The Equations to PASTE in Fusion 360 'Equation Driven Curve' Feature:\n\n")
+			case 2: # Python
+				f_obj.write("The Equations to PASTE in Python code:\n\n")		
 		f_obj.write(f"{equations[0]}\n")
 		f_obj.write(f"{equations[1]}\n\n")
 		f_obj.write("-"*85)
@@ -323,8 +345,24 @@ my_progress.grid(sticky="w", row=0, column=0, padx=10, pady=10)
 status_label = Label(status_frame, text="", justify='right')
 status_label.grid(sticky="e", row=0, column=1, padx=10, pady=10)
 
+output_format = LabelFrame(root, text="Output File Format", padx=5, pady=5)
+output_format.grid(sticky="we", row=3, padx=10, pady=10)
+
+outputformat = tk.IntVar()
+
+solidWorks = Radiobutton(output_format, text="SolidWorks", variable=outputformat, value=0)
+solidWorks.grid(sticky="w", row=0, column=0, padx=10, pady=10)
+
+fusion360 = Radiobutton (output_format, text="Fusion 360", variable=outputformat,value=1)
+fusion360.grid(sticky="we", row=0, column=1, padx=10, pady=10)
+
+python = Radiobutton (output_format, text="Python", variable=outputformat, value=2)
+python.grid(sticky="e", row=0, column=2, padx=10, pady=10)
+
+outputformat.set(0)
+
 run_button = Button(root, text="Run", padx=30, command=run_main_code)
-run_button.grid(sticky="e", row=3, padx=10, pady=10)
+run_button.grid(sticky="e", row=4, padx=10, pady=10)
 
 
 #       Runs the app (App's Main Loop)
