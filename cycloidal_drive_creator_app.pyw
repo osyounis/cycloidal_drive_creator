@@ -19,13 +19,10 @@ profile design in a cycloid reducer using instant velocity center".
 https://www.academia.edu/32875937/On_the_lobe_profile_design_in_a_cycloid_reducer_using_instant_velocity_center
 
 
-Contributors: Sean Alford.
-
-His improvements allowed the app to output equations needed to create the
-cycloidal drive profile in Fusion360 and Python. He also added a selections
-section to the app, to allow the user to select their desired program: Python,
-SolidWorks or Fusion360. The following is a link to his GitHub page:
-https://github.com/seanalford
+Contributors:
+• Sean Alford: https://github.com/seanalford
+		- Added support for Fusion360
+		- Added support for Python
 
 
 Author: Omar Younis
