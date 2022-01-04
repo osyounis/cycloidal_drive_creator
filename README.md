@@ -17,7 +17,7 @@ This application takes these four parameters and creates a parametric equation f
 ---
 
 ## Installation
-[**Python 3.9**](https://www.python.org/) or higher is requried to run this application. If this is your first time installing Python, **please make sure to add python to your computer's PATH**. To do this, make sure you check the **"Add Python to PATH"** box on the installation wizard, as shown in the image below.
+[**Python 3.9**](https://www.python.org/) or higher is required to run this application. If this is your first time installing Python, **please make sure to add python to your computer's PATH**. To do this, make sure you check the **"Add Python to PATH"** box on the installation wizard, as shown in the image below.
 
 ![Adding Python to PATH on Install](https://raw.githubusercontent.com/osyounis/cycloidal_drive_creator/main/figures/Python_PATH.JPG)
 
@@ -26,7 +26,7 @@ Once you have the correct Python version installed, you can download and run the
 ---
 
 ## Quick Start
-In order to use this appication, you will need to know the following parameters for your custom cycloidal drive: rotor radius, roller radius, eccentricity, and the number of rollers. If you are unfamiliar with the term "eccentricity", it is the offset from the center of the input shaft to the center of the rotor. These descriptions will appear in the output file the application creates. Once you have these parameters, you can use the application. 
+In order to use this application, you will need to know the following parameters for your custom cycloidal drive: rotor radius, roller radius, eccentricity, and the number of rollers. If you are unfamiliar with the term "eccentricity", it is the offset from the center of the input shaft to the center of the rotor. These descriptions will appear in the output file the application creates. Once you have these parameters, you can use the application. 
 
 Launch the application by double clicking the `.pyw` file.
 
