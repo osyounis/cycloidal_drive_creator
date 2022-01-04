@@ -30,7 +30,7 @@ In order to use this application, you will need to know the following parameters
 
 Launch the application by double clicking the `.pyw` file.
 
-![Cycloidal Drive Creator App GUI](https://raw.githubusercontent.com/osyounis/cycloidal_drive_creator/main/figures/GUI_interface.JPG)
+![Cycloidal Drive Creator App GUI](https://raw.githubusercontent.com/osyounis/cycloidal_drive_creator/main/figures/GUI_interface_2.JPG)
 
 Input your parameters into the correct fields. Click the "Browse" button to select a name and location for your output file; this is where parametric equation for your rotor will be saved. Once you have filled out all the fields, press the "Run" button. If any information was entered incorrectly or is missing, the application will stop and flag which fields you need to fix before running it again.
 
