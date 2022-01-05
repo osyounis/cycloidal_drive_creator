@@ -30,9 +30,11 @@ In order to use this application, you will need to know the following parameters
 
 Launch the application by double clicking the `.pyw` file.
 
-![Cycloidal Drive Creator App GUI](https://raw.githubusercontent.com/osyounis/cycloidal_drive_creator/main/figures/GUI_interface_2.JPG)
+![Cycloidal Drive Creator App GUI](https://raw.githubusercontent.com/osyounis/cycloidal_drive_creator/working/figures/GUI_interface_3.JPG)
 
-Input your parameters into the correct fields. Click the "Browse" button to select a name and location for your output file; this is where parametric equation for your rotor will be saved. Once you have filled out all the fields, press the "Run" button. If any information was entered incorrectly or is missing, the application will stop and flag which fields you need to fix before running it again.
+Input your parameters into the correct fields. Click the "Browse" button to select a name and location for your output file; this is where parametric equation for your rotor will be saved. Once you have filled out all the fields press the "Preview" button to see a plot of your rotor (shown below), or press the "Run" button to create your rotor equations. If any information was entered incorrectly or is missing, the application will stop and flag which fields you need to fix before running it again.
+
+![Cycloidal Drive Creator App Preview](https://raw.githubusercontent.com/osyounis/cycloidal_drive_creator/working/figures/Preview_Window.JPG)
 
 Once the application has successfully run, open the output file. There you will find the parametric equation for your cycloidal drive. You can copy and paste the equation directly into SolidWorks' "Equation Driven Curve" feature wizard. If you would like more information on where to find and how to use the "Equation Driven Curve" feature in SolidWorks, please see my [original blog post](https://blogs.solidworks.com/teacher/2014/07/building-a-cycloidal-drive-with-solidworks.html).
 
