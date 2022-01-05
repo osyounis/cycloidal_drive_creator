@@ -11,6 +11,8 @@ the full curve.
 
 This code has the following requirements needed to run:
 • Python 3.9
+• NumpPy
+• Matplotlib
 
 
 The Cycloidal Drive equations this program kicks out was made using the
@@ -23,6 +25,7 @@ Contributors:
 • Sean Alford: https://github.com/seanalford
 		- Added support for Fusion360
 		- Added support for Python
+		- Influenced "Preview" section
 
 
 Author: Omar Younis
@@ -33,6 +36,9 @@ import os
 import time
 
 from fractions import Fraction
+import numpy as np
+import matplotlib.pyplot as plt
+
 from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
@@ -198,6 +204,61 @@ def create_output_file(user_info, equations):
 		f_obj.write(f"{equations[1]}\n\n")
 		f_obj.write("-"*85)
 		f_obj.write("\n")
+
+
+def preview_fit():
+	"""This function plots the rotor and the rollers to preview the fit."""
+	# Getting info and setting up plot
+	entry_warning_boxes = [(rotor_radius_entry.get(), rotor_radius_warning),
+					           (roller_radius_entry.get(), roller_radius_warning),
+					           (eccentricity_entry.get(), eccentricity_warning),
+					           (num_rollers_entry.get(), num_rollers_warning)]
+
+	entry_box_statuses = entry_checker(entry_warning_boxes)
+	if False in entry_box_statuses:
+		return
+
+	user_input_info = get_info()
+	R = user_input_info[0]		# Rotor Radius
+	Rr = user_input_info[1]		# Roller Radius
+	E = user_input_info[2]		# Eccentricity
+	N = user_input_info[3]		# Number of Rollers
+	
+	ax = plt.figure(figsize=(8, 8)).add_subplot()
+
+	# Getting Rotor Equation and Plotting Result
+	t = np.linspace(0, 2*np.pi, 1000)	# Number of Points
+	psi = np.arctan((np.sin((1-N)*t))/((R/(E*N)) - np.cos((1-N)*t)))
+	x = (R*np.cos(t))-(Rr*np.cos(t+psi))-(E*np.cos(N*t)) + E			# E is added to offset the Rotor to test fit with rollers
+	y = (-R*np.sin(t))+(Rr*np.sin(t+psi))+(E*np.sin(N*t))
+
+	ax.plot(x, y, label="Rotor")
+
+	# Creating Rotor Radius (the circle which the rollers sit on [position away from the origin]) and Plotting Result
+	Rt = np.linspace(0, 2*np.pi, 150)	# Number of Points.
+	Rx = R * np.cos(Rt)
+	Ry = R * np.sin(Rt)
+
+	ax.plot(Rx, Ry, '--g', label="Roller Position (R)")
+
+	# Creating Roller Equation and Plotting All Rollers on Plot
+	theta = np.linspace((np.pi/2), (5/2 * np.pi), (N + 1))		# Dividing 2π by number of roller
+	Rrt = np.linspace(0, 2*np.pi, 150)							# Number of Points
+	
+	for index, radian in enumerate(theta):
+		Rrx = Rr * np.cos(Rrt) + (R * np.sin(radian))
+		Rry = Rr * np.sin(Rrt) + (R * np.cos(radian))
+
+		if index == 0:
+			ax.plot(Rrx, Rry, 'r', label="Roller")
+		else:
+			ax.plot(Rrx, Rry, 'r')
+	
+	# Showing the Plot
+	ax.set(aspect=1)	# Locks the axes so the curve is show properly
+	plt.legend(loc='upper right')
+	plt.grid()
+	plt.show()
 
 
 def run_main_code():
@@ -369,6 +430,9 @@ my_progress.grid(sticky="w", row=0, column=0, padx=10, pady=10)
 
 status_label = Label(status_frame, text="", justify='right')
 status_label.grid(sticky="e", row=0, column=1, padx=10, pady=10)
+
+preview_button = Button(root, text="Preview", padx=30, command=preview_fit)
+preview_button.grid(sticky="w", row=4, padx=10, pady=10)
 
 run_button = Button(root, text="Run", padx=30, command=run_main_code)
 run_button.grid(sticky="e", row=4, padx=10, pady=10)
