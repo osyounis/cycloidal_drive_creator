@@ -152,8 +152,8 @@ def create_equations(user_info):
 
 	elif outputformat_value == 1:	# Fusion360
 		psi = f"atan(sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-cos({1-N}*t)))"
-		x_equation = f"X = ({R}*cos(t))-({Rr}*cos(t+{psi}))-({E}*cos({N}*t))"
-		y_equation = f"Y = (-{R}*sin(t))+({Rr}*sin(t+{psi}))+({E}*sin({N}*t))"
+		x_equation = f"X = (({R}*cos(t))-({Rr}*cos(t+{psi}))-({E}*cos({N}*t))) * 0.1"
+		y_equation = f"Y = ((-{R}*sin(t))+({Rr}*sin(t+{psi}))+({E}*sin({N}*t))) * 0.1"
 
 	else:	# Python
 		psi = f"np.arctan(np.sin({1-N}*t)/(({Fraction(R/(E*N)).limit_denominator()})-np.cos({1-N}*t)))"
