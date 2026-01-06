@@ -1,3 +1,5 @@
+![Project Banner](./assets/cycloidal-drive-creator-banner.jpg)
+
 # Cycloidal Drive Creator App
 
 ## Content
